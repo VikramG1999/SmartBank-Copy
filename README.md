@@ -42,4 +42,4 @@ The backend source code is available. Frontend and backend deployment will be co
 
 ## Author
 
-Vikram Borad
+Vikram Gorad
