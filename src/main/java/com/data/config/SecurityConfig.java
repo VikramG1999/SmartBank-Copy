@@ -1,6 +1,8 @@
 package com.data.config;
 
 import java.util.List;
+import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +30,8 @@ public class SecurityConfig {
 
 	@Autowired
 	private JwtAuthFilter jwtAuthFilter;
+	@Value("${app.cors-origins:http://localhost:3000,http://localhost:5173}")
+	private String[] corsOrigins;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -58,7 +62,7 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173"));
+		config.setAllowedOrigins(Arrays.asList(corsOrigins));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setExposedHeaders(List.of("Content-Disposition"));
