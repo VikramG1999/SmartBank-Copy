@@ -118,16 +118,19 @@ public class AuthServiceImpl implements AuthService {
 
 	private void sendResetEmail(User user, String link) {
 		String body = "Hello " + user.getName() + ",\n\n"
-				+ "Use this link to reset your SmartBank password. It is valid for " + RESET_MINUTES
-				+ " minutes and works only once:\n" + link + "\n\n"
-				+ "If you did not request this, you can ignore this email.";
+				+ "We received a request to reset your SmartBank password.\n\n"
+				+ "Click the link below to reset your password:\n\n"
+				+ link + "\n\n"
+				+ "This link is valid for " + RESET_MINUTES + " minutes and can be used only once.\n"
+				+ "If you did not request this, you can ignore this email. Your password will not change.\n\n"
+				+ "- SmartBank";
 
 		if (mailSender != null && !mailFrom.isBlank()) {
 			try {
 				SimpleMailMessage message = new SimpleMailMessage();
 				message.setFrom(mailFrom);
 				message.setTo(user.getEmail());
-				message.setSubject("SmartBank password reset");
+				message.setSubject("Reset your SmartBank password");
 				message.setText(body);
 				mailSender.send(message);
 				return;
