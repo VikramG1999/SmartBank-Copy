@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -32,10 +33,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 			String token = header.substring(7);
 
 			if (jwtUtil.isTokenValid(token)) {
-				UserDetails user = userDetailsService.loadUserByUsername(jwtUtil.extractEmail(token));
-				UsernamePasswordAuthenticationToken auth =
-						new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-				SecurityContextHolder.getContext().setAuthentication(auth);
+				try {
+					UserDetails user = userDetailsService.loadUserByUsername(jwtUtil.extractEmail(token));
+					UsernamePasswordAuthenticationToken auth =
+							new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(auth);
+				} catch (UsernameNotFoundException e) {
+					// user no longer exists: continue unauthenticated, Spring returns 401
+				}
 			}
 		}
 		filterChain.doFilter(request, response);

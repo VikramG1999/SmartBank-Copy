@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.data.dto.AmountRequest;
 import com.data.model.Account;
 import com.data.model.FixedDeposit;
 import com.data.model.User;
@@ -53,6 +56,18 @@ public class AdminController {
 	@PutMapping("/unfreeze/{accountNumber}")
 	public ResponseEntity<Account> unfreeze(@PathVariable String accountNumber) {
 		return ResponseEntity.ok(accountService.unfreezeAccount(accountNumber));
+	}
+
+	@PostMapping("/accounts/{accountNumber}/deposit")
+	public ResponseEntity<Account> adminDeposit(@PathVariable String accountNumber,
+			@RequestBody AmountRequest request) {
+		return ResponseEntity.ok(accountService.adminDeposit(accountNumber, request.getAmount()));
+	}
+
+	@PostMapping("/accounts/{accountNumber}/withdraw")
+	public ResponseEntity<Account> adminWithdraw(@PathVariable String accountNumber,
+			@RequestBody AmountRequest request) {
+		return ResponseEntity.ok(accountService.adminWithdraw(accountNumber, request.getAmount()));
 	}
 
 	@GetMapping("/transactions")

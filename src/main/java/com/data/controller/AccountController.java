@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,12 +45,14 @@ public class AccountController {
 		return ResponseEntity.ok(service.resolveAccount(auth.getName(), acc));
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/account/deposit")
 	public ResponseEntity<Account> deposit(@Valid @RequestBody AmountRequest request,
 			@RequestHeader(value = "X-Account-Number", required = false) String acc, Authentication auth) {
 		return ResponseEntity.ok(service.deposit(auth.getName(), acc, request.getAmount()));
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/account/withdraw")
 	public ResponseEntity<Account> withdraw(@Valid @RequestBody AmountRequest request,
 			@RequestHeader(value = "X-Account-Number", required = false) String acc, Authentication auth) {

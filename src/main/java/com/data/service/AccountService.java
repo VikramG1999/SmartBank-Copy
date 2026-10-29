@@ -38,4 +38,8 @@ public interface AccountService {
 	Account unfreezeAccount(String accountNumber);
 
 	Map<String, Object> getStats();
+
+	Account adminDeposit(String accountNumber, BigDecimal amount);
+
+	Account adminWithdraw(String accountNumber, BigDecimal amount);
 }

@@ -180,6 +180,22 @@ public class AccountServiceImpl implements AccountService {
 		stats.put("maturedFixedDeposits", fixedDepositRepository.countByStatus("MATURED"));
 		return stats;
 	}
+	
+	@Override
+	@Transactional
+	public Account adminDeposit(String accountNumber, BigDecimal amount) {
+		Account account = accountRepository.findByAccountNumber(accountNumber.trim().toUpperCase())
+				.orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+		return credit(account, amount, "DEPOSIT", "Simulated");
+	}
+
+	@Override
+	@Transactional
+	public Account adminWithdraw(String accountNumber, BigDecimal amount) {
+		Account account = accountRepository.findByAccountNumber(accountNumber.trim().toUpperCase())
+				.orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+		return debit(account, amount, "WITHDRAW", "Simulated");
+	}
 
 	// ---------- helper methods ----------
 
